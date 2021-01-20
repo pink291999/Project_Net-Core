@@ -1,0 +1,185 @@
+﻿
+
+@using Website.Helpers
+@model IEnumerable<Website.ViewModels.CartItem>
+@{ ViewData["Title"] = "Giỏ hàng";
+                Layout = "~/Views/Shared/_ShopLayout.cshtml"; }
+
+    <section class="main-container col2-right-layout">
+        <div class="main container">
+            <div class="row">
+                <div class="col-main col-sm-9 col-xs-12">
+                    <div class="page-title">
+                        <h2>Thanh toán</h2>
+                    </div>
+                    <div class="page-content checkout-page">
+
+                        <h4 class="checkout-sep">1. Thông tin người mua</h4>
+                        <div class="box-border">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <h4><a title="login" asp-action="DangKy" asp-controller="KhachHang">Đăng ký ngay!</a></h4>
+                                    <p>Đã có tài khoản? <a title="login" asp-action="DangNhap" asp-controller="KhachHang">Đăng nhập</a></p>
+                                    <h4>Đăng ký và tiết kiệm thời gian</h4>
+                                    <p>Đăng ký với chúng tôi để mang đến nhiều lợi ích và thuận tiện:</p>
+                                    <p><i class="fa fa-check-circle text-primary"></i> Thanh toán nhanh chóng và dễ dàng</p>
+                                    <p><i class="fa fa-check-circle text-primary"></i> Ưu đãi dành cho thành viên</p>
+                                    <p><i class="fa fa-check-circle text-primary"></i>Dễ dàng truy cập vào lịch sử và trạng thái đơn hàng của bạn</p>
+                                </div>
+                                <div class="col-sm-6">
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <form>
+                            <h4 class="checkout-sep">2. Thông tin giao hàng</h4>
+                            <div class="box-border">
+                                <ul>
+                                    <li class="row">
+                                        <div class="col-xs-12">
+                                            <label for="name_1" class="required">Họ và tên</label>
+                                            <input required class="input form-control" type="text" name="" id="name_1">
+                                        </div>
+                                        <!--/ [col] -->
+
+                                    </li>
+                                    <!--/ .row -->
+
+                                    <li class="row">
+                                        <div class="col-sm-6">
+                                            <label for="company_name_1">Tên công ty</label>
+                                            <input class="input form-control" type="text" name="" id="company_name_1">
+                                        </div>
+                                        <!--/ [col] -->
+
+                                        <div class="col-sm-6">
+                                            <label for="email_address_1" class="required">Email</label>
+                                            <input required class="input form-control" type="text" name="" id="email_address_1">
+                                        </div>
+                                        <!--/ [col] -->
+
+                                    </li>
+                                    <!--/ .row -->
+
+                                    <li class="row">
+                                        <div class="col-xs-12">
+                                            <label for="address_1" class="required">Địa chỉ</label>
+                                            <input required class="input form-control" type="text" name="" id="address_1">
+                                        </div>
+                                        <!--/ [col] -->
+
+                                    </li>
+                                    <!--/ .row -->
+                                    <!--/ .row -->
+                                    <!--/ .row -->
+
+                                    <li class="row">
+                                        <div class="col-xs-12">
+                                            <label for="telephone_1" class="required">Số điện thoại</label>
+                                            <input required class="input form-control" type="text" name="" id="telephone_1">
+                                        </div>
+
+
+                                    </li>
+                                    <!--/ .row -->
+
+                                </ul>
+                            </div>
+                            <h4 class="checkout-sep last">3. Đơn hàng</h4>
+                            <div class="box-border">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered cart_summary">
+                                        <thead>
+                                            <tr>
+                                                <th class="cart_product">Sản phẩm</th>
+                                                <th>Mô tả</th>
+                                                <th>Đơn giá</th>
+                                                <th>Số lượng</th>
+                                                <th>Thành tiền</th>
+                                                <th>Tổng</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model)
+                                            {
+                                <tr>
+                                    <td class="cart_product"><a asp-action="Detail" asp-route-id="@item.MaHangHoa" asp-controller="HangHoa"><img src="~/Hinh/HangHoa/@item.Hinh" alt="@item.TenHh"></a></td>
+                                    <td class="cart_description">
+                                        <p class="product-name"><a asp-action="Detail" asp-route-id="@item.MaHangHoa" asp-controller="HangHoa">@item.TenHh</a></p>
+                                    </td>
+                                    <td class="price"><span>@item.DonGia.ToVnd()</span></td>
+                                    <td class="qty"><input class="form-control input-sm" type="text" readonly value="@item.SoLuong"></td>
+                                    <td class="price"><span>@item.ThanhTien.ToVnd()</span></td>
+                                </tr>
+}
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="2" rowspan="2"></td>
+                                                <td colspan="3">Phí vận chuyển</td>
+                                                <td colspan="2">30.000.00 đ </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="3"><strong>Tổng tiền</strong></td>
+                                                <td colspan="2"><strong>@Model.Sum(p => p.ThanhTien + 30000).ToVnd() </strong></td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                <button class="button pull-right"><span>Thanh toán</span></button>
+                                <a asp-action="PaypalCheckout">
+                                    <img src="~/Hinh/paypal_checkout.gif" height="100" />
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <aside class="right sidebar col-sm-3 col-xs-12">
+                    <div class="sidebar-checkout block">
+                        <div class="sidebar-bar-title">
+                            <h3>Your Checkout</h3>
+                        </div>
+                        <div class="block-content">
+                            <dl>
+                                <dt class="complete"> Billing Address <span class="separator">|</span> <a href="#">Change</a> </dt>
+                                <dd class="complete">
+                                    <address>
+                                        Deo Jone<br>
+                                        Company Name<br>
+                                        7064 Lorem <br>
+                                        Ipsum <br>
+                                        Vestibulum 0 666/13<br>
+                                        United States<br>
+                                        T: 12345678 <br>
+                                        F: 987654
+                                    </address>
+                                </dd>
+                                <dt class="complete"> Shipping Address <span class="separator">|</span> <a href="#">Change</a> </dt>
+                                <dd class="complete">
+                                    <address>
+                                        Deo Jone<br>
+                                        Company Name<br>
+                                        7064 Lorem <br>
+                                        Ipsum <br>
+                                        Vestibulum 0 666/13<br>
+                                        United States<br>
+                                        T: 12345678 <br>
+                                        F: 987654
+                                    </address>
+                                </dd>
+                                <dt class="complete"> Shipping Method <span class="separator">|</span> <a href="#">Change</a> </dt>
+                                <dd class="complete">
+                                    Flat Rate - Fixed <br>
+                                    <span class="price">$15.00</span>
+                                </dd>
+                                <dt> Payment Method </dt>
+                            </dl>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </section>
+
+
+
